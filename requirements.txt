@@ -1,0 +1,20 @@
+# Web Framework
+fastapi==0.115.8
+uvicorn==0.34.0
+jinja2==3.1.5
+
+
+# AI 
+# httpx==0.28.1
+# google-ai-generativelanguage==0.6.15
+# google-api-core==2.30.3
+# google-api-python-client==2.196.0
+# google-auth==2.48.0
+# google-auth-httplib2==0.4.0
+# google-genai==1.61.0
+# google-generativeai==0.8.6
+# googleapis-common-protos==1.75.0
+
+# System 
+python-multipart
+python-dotenv
