@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-16 px-6">
+    <div class="mb-10 text-center">
+        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-slate-50 mb-4">Solution Design Center</h1>
+        <p class="text-gray-600 dark:text-slate-300">Submit operational specifics to authorize the specialized Qwen Agent Society analysis.</p>
+    </div>
+
+    <div id="intakeFormBox" class="bg-white dark:bg-slate-950 rounded p-8 border border-gray-200 dark:border-slate-800">
+        <form id="agentSocietyForm" onsubmit="executeSolutionPipeline(event)">
+            <h2 class="text-xl font-bold mb-6 border-b pb-2 text-karitaBlue">Organizational Details</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="contactName" class="block text-xs font-semibold mb-1">Contact Name</label>
+                    <input type="text" id="contactName" required class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-karitaBlue">
+                </div>
+                <div>
+                    <label for="contactEmail" class="block text-xs font-semibold mb-1">Contact Email Address</label>
+                    <input type="email" id="contactEmail" required class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-karitaBlue">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div>
+                    <label for="cityLoc" class="block text-xs font-semibold mb-1">City</label>
+                    <input type="text" id="cityLoc" required placeholder="e.g., Toronto" class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-karitaBlue">
+                </div>
+                <div>
+                    <label for="postalLoc" class="block text-xs font-semibold mb-1">Postal Code</label>
+                    <input type="text" id="postalLoc" required class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-karitaBlue">
+                </div>
+                <div>
+                    <label for="provinceLoc" class="block text-xs font-semibold mb-1">Province</label>
+                    <input type="text" id="provinceLoc" required value="Ontario" class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-karitaBlue">
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <label for="framerProblemContext" class="block text-xs font-semibold mb-1">Active Problem Statement Context</label>
+                <textarea id="framerProblemContext" rows="5" required class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded p-3 outline-none focus:ring-2 focus:ring-karitaBlue" placeholder="Paste information or let automated script load context from the Framer tool..."></textarea>
+            </div>
+
+            <button type="submit" id="submitBtn" class="w-full bg-karitaBlue text-white font-bold py-3 rounded hover:bg-blue-700 transition">
+                Submit Strategy Evaluation
+            </button>
+        </form>
+    </div>
+
+    <div id="processingIndicator" class="hidden text-center py-12">
+        <p class="text-lg font-bold text-karitaGreen animate-pulse">Working on the problem...</p>
+        <p class="text-xs text-gray-500 mt-2">Invoking decision framework metrics across Qwen sub-agents.</p>
+    </div>
+
+    <div id="outputDisplayBox" class="hidden space-y-6">
+        <div class="bg-green-50 dark:bg-slate-900 border border-green-200 dark:border-slate-800 p-6 rounded">
+            <h2 class="text-xl font-bold text-karitaGreen mb-4">Generated Strategy Synthesis Output</h2>
+            <div id="solutionRawTarget" class="text-sm space-y-4 whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-slate-200"></div>
+        </div>
+        
+        <div class="flex gap-4">
+            <button onclick="window.location.href='/reframer'" class="flex-1 border border-gray-300 dark:border-slate-700 py-3 rounded hover:bg-gray-100 dark:hover:bg-slate-800 font-medium text-xs">
+                Back to Add More Context
+            </button>
+            <button onclick="alert('Saving system record parameters behind secure vault...')" class="flex-1 bg-karitaGreen text-white font-bold py-3 rounded hover:bg-green-700 text-xs">
+                Save and Download PDF Report
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const cachedProblem = localStorage.getItem('karita_clean_problem');
+        if (cachedProblem) {
+            document.getElementById('framerProblemContext').value = cachedProblem;
+        }
+    });
+
+    async function executeSolutionPipeline(e) {
+        e.preventDefault();
+        
+        const formBox = document.getElementById('intakeFormBox');
+        const processing = document.getElementById('processingIndicator');
+        const outputBox = document.getElementById('outputDisplayBox');
+        
+        formBox.classList.add('hidden');
+        processing.classList.remove('hidden');
+
+        const payload = {
+            name: document.getElementById('contactName').value,
+            email: document.getElementById('contactEmail').value,
+            city: document.getElementById('cityLoc').value,
+            postal: document.getElementById('postalLoc').value,
+            province: document.getElementById('provinceLoc').value,
+            problem: document.getElementById('framerProblemContext').value
+        };
+
+        try {
+            const response = await fetch('/api/solve', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            
+            if(data.success) {
+                processing.classList.add('hidden');
+                document.getElementById('solutionRawTarget').textContent = data.solution;
+                outputBox.classList.remove('hidden');
+            } else {
+                alert("Error optimizing data inputs.");
+                formBox.classList.remove('hidden');
+                processing.classList.add('hidden');
+            }
+        } catch(err) {
+            alert("Network connection failure.");
+            formBox.classList.remove('hidden');
+            processing.classList.add('hidden');
+        }
+    }
+</script>
+{% endblock %}
