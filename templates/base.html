@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karita</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        karitaGreen: '#16a34a',
+                        karitaBlue: '#2563eb'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { transition: background-color 0.2s ease, color 0.2s ease, font-size 0.15s ease; }
+        /* Strict WCAG scaling */
+        body.font-size-small { font-size: 8px !important; }
+        body.font-size-medium { font-size: 14px !important; }
+        body.font-size-large { font-size: 28px !important; }
+        
+        /* Sticky header offset for in-page anchors */
+        html { scroll-padding-top: 5rem; } 
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex flex-col min-h-screen font-size-medium">
+    
+    <nav class="border-b border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 sticky top-0 z-50 transition-colors">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="/" class="text-2xl font-bold text-karitaGreen focus:ring-2 focus:ring-karitaBlue focus:outline-none rounded-md">Karita</a>
+            
+            <div class="flex items-center space-x-6 text-sm font-medium text-gray-600 dark:text-slate-300">
+                <div class="hidden lg:flex space-x-6">
+                    <span class="text-gray-400">Pillars:</span>
+                    <a href="/#strategy" class="hover:text-karitaBlue focus:ring-2 focus:ring-karitaBlue focus:outline-none rounded-md">Strategy</a>
+                    <a href="/#marketing" class="hover:text-karitaBlue focus:ring-2 focus:ring-karitaBlue focus:outline-none rounded-md">Marketing</a>
+                    <a href="/#operations" class="hover:text-karitaBlue focus:ring-2 focus:ring-karitaBlue focus:outline-none rounded-md">Operations</a>
+                    <a href="/#finance" class="hover:text-karitaBlue focus:ring-2 focus:ring-karitaBlue focus:outline-none rounded-md">Financial</a>
+                    <span class="h-4 w-px bg-gray-300 dark:bg-slate-700" aria-hidden="true"></span>
+                    <a href="/about" class="hover:text-karitaBlue focus:ring-2 focus:ring-karitaBlue focus:outline-none rounded-md">About</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-1 bg-gray-100 dark:bg-slate-800 p-1 rounded-lg" role="group" aria-label="Font sizing profile rules">
+                        <button onclick="setFontSize('small')" id="btn-size-small" class="px-2 py-1 text-xs rounded hover:bg-white dark:hover:bg-slate-700 transition focus:ring-2 focus:ring-karitaBlue focus:outline-none">A-</button>
+                        <button onclick="setFontSize('medium')" id="btn-size-medium" class="px-2 py-1 text-xs rounded bg-white dark:bg-slate-600 font-bold transition focus:ring-2 focus:ring-karitaBlue focus:outline-none">A</button>
+                        <button onclick="setFontSize('large')" id="btn-size-large" class="px-2 py-1 text-xs rounded hover:bg-white dark:hover:bg-slate-700 transition focus:ring-2 focus:ring-karitaBlue focus:outline-none">A+</button>
+                    </div>
+
+                    <button onclick="toggleTheme()" id="theme-toggle-btn" class="px-3 py-1 text-xs font-semibold rounded-lg bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 transition focus:ring-2 focus:ring-karitaBlue focus:outline-none">
+                        Dark Mode
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white dark:bg-slate-950 border-t border-gray-200 dark:border-slate-800 py-8 transition-colors mt-auto">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center text-gray-500 dark:text-slate-400 text-sm">
+            <span>&copy; 2026 Karita</span>
+            <span>Toronto, ON</span>
+        </div>
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle-btn');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                btn.innerText = "Dark Mode";
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                btn.innerText = "Light Mode";
+            }
+        }
+
+        function setFontSize(size) {
+            const body = document.body;
+            body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large');
+            body.classList.add(`font-size-${size}`);
+            localStorage.setItem('fontSizePreference', size);
+            
+            ['small', 'medium', 'large'].forEach(s => {
+                const btn = document.getElementById(`btn-size-${s}`);
+                if(s === size) {
+                    btn.classList.add('bg-white', 'dark:bg-slate-600', 'font-bold');
+                } else {
+                    btn.classList.remove('bg-white', 'dark:bg-slate-600', 'font-bold');
+                }
+            });
+        }
+
+        (function() {
+            const cachedTheme = localStorage.getItem('theme');
+            const btn = document.getElementById('theme-toggle-btn');
+            if (cachedTheme === 'dark' || (!cachedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                if(btn) btn.innerText = "Light Mode";
+            }
+            const cachedSize = localStorage.getItem('fontSizePreference') || 'medium';
+            window.addEventListener('DOMContentLoaded', () => setFontSize(cachedSize));
+        })();
+    </script>
+</body>
+</html>
