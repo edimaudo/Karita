@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-12 px-6">
+    
+    <!-- STATE 1: Authorization Prompt (Shown if not authenticated) -->
+    {% if not authenticated %}
+    <div class="max-w-md mx-auto my-20 bg-white dark:bg-slate-950 p-8 rounded border border-gray-200 dark:border-slate-800 shadow-sm">
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-slate-50 mb-2">Secure Review Portal</h1>
+            <p class="text-xs text-gray-600 dark:text-slate-400">Enter administrator credentials to review active database logs.</p>
+        </div>
+        
+        {% if error %}
+        <div class="mb-4 p-3 bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400 text-xs rounded border border-red-200 dark:border-red-900">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form action="/review" method="POST" class="space-y-4">
+            <div>
+                <label for="portalPassword" class="block text-xs font-semibold mb-1 text-gray-700 dark:text-slate-300">Access Password</label>
+                <input type="password" id="portalPassword" name="password" required 
+                       class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-karitaBlue text-sm">
+            </div>
+            <button type="submit" class="w-full bg-karitaBlue text-white font-bold py-2 rounded hover:bg-blue-700 transition text-sm">
+                Unlock Records
+            </button>
+        </form>
+    </div>
+
+    <!-- STATE 2: Secure Records Dashboard (Shown if authenticated) -->
+    {% else %}
+    <div class="mb-8 flex justify-between items-center border-b border-gray-200 dark:border-slate-800 pb-4">
+        <div>
+            <h1 class="text-3xl font-extrabold text-gray-900 dark:text-slate-50">Saved Case Records</h1>
+            <p class="text-xs text-gray-600 dark:text-slate-400 mt-1">Reviewing active consulting logs generated across the Qwen multi-agent pipeline.</p>
+        </div>
+        <a href="/review?logout=true" class="text-xs font-semibold border border-gray-300 dark:border-slate-700 px-3 py-2 rounded hover:bg-gray-100 dark:hover:bg-slate-800 transition">
+            Lock Portal
+        </a>
+    </div>
+
+    {% if not records %}
+    <div class="text-center py-20 border border-dashed border-gray-200 dark:border-slate-800 rounded bg-white dark:bg-slate-950">
+        <p class="text-sm text-gray-500">No submission parameters have been committed to the database yet.</p>
+    </div>
+    {% else %}
+    <div class="space-y-6">
+        {% for item in records %}
+        <div class="bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded p-6 shadow-sm">
+            <!-- Header Meta Info -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-100 dark:border-slate-900 pb-4 mb-4 text-xs">
+                <div>
+                    <span class="block font-bold text-gray-400 uppercase tracking-wider">Contact Profile</span>
+                    <span class="font-semibold text-gray-900 dark:text-slate-200 text-sm">{{ item.name }}</span> 
+                    <span class="text-gray-500 dark:text-slate-400">({{ item.email }})</span>
+                </div>
+                <div>
+                    <span class="block font-bold text-gray-400 uppercase tracking-wider">Geographic Footprint</span>
+                    <span class="text-gray-800 dark:text-slate-300">{{ item.city }}, {{ item.postal }}, {{ item.province }}</span>
+                </div>
+                <div>
+                    <span class="block font-bold text-gray-400 uppercase tracking-wider">Agent Systems Deployed</span>
+                    <span class="text-karitaGreen font-mono font-semibold text-xs">{{ item.agents_used | join(', ') }}</span>
+                </div>
+            </div>
+
+            <!-- Context Breakdown Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 text-xs">
+                <div>
+                    <h3 class="font-bold text-karitaBlue mb-1 uppercase tracking-wider">Formulated Problem</h3>
+                    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded font-mono text-gray-700 dark:text-slate-300 overflow-x-auto whitespace-pre-wrap max-h-48 overflow-y-auto">
+                        {{ item.problem }}
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-karitaGreen mb-1 uppercase tracking-wider">Decision Framework & Solution</h3>
+                    <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded font-mono text-gray-700 dark:text-slate-300 overflow-x-auto whitespace-pre-wrap max-h-48 overflow-y-auto">
+                        {{ item.solution }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endif %}
+
+</div>
+{% endblock %}
