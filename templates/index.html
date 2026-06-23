@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-6 py-20">
+    <div class="text-center max-w-3xl mx-auto mb-20">
+        <h1 class="text-5xl font-extrabold tracking-tight text-gray-900 dark:text-slate-50 mb-6">
+            Strategic Advisory for Non-Profits
+        </h1>
+        <p class="text-lg text-gray-600 dark:text-slate-300 mb-8">
+            Karita harnesses specialized AI decision intelligence to help community organizations translate operational friction into clear, measurable social impact.
+        </p>
+        <a href="/reframer" class="inline-block bg-karitaGreen text-white font-bold px-8 py-4 rounded hover:bg-green-700 transition focus:ring-2 focus:ring-karitaBlue focus:outline-none">
+            Begin Problem Framing
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-stretch">
+        <div class="border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-6 rounded transition-colors flex flex-col justify-between" id="strategy">
+            <div>
+                <h2 class="text-lg font-bold text-karitaGreen mb-3">Strategy</h2>
+                <p class="text-xs text-gray-600 dark:text-slate-400">Translate long-term vision into concrete, actionable implementation plans and sustainable roadmaps tailored to community growth.</p>
+            </div>
+        </div>
+
+        <div class="border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-6 rounded transition-colors flex flex-col justify-between" id="marketing">
+            <div>
+                <h2 class="text-lg font-bold text-karitaBlue mb-3">Marketing</h2>
+                <p class="text-xs text-gray-600 dark:text-slate-400">Refine external communications, target specific stakeholder requirements, and scale outreach campaigns to engage donors and volunteers.</p>
+            </div>
+        </div>
+
+        <div class="border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-6 rounded transition-colors flex flex-col justify-between" id="operations">
+            <div>
+                <h2 class="text-lg font-bold text-karitaGreen mb-3">Operational Effectiveness</h2>
+                <p class="text-xs text-gray-600 dark:text-slate-400">Structure optimized talent workflows, execute comprehensive services reviews, and build dedicated recruitment pipelines for volunteer retention.</p>
+            </div>
+        </div>
+
+        <div class="border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-6 rounded transition-colors flex flex-col justify-between" id="finance">
+            <div>
+                <h2 class="text-lg font-bold text-karitaBlue mb-3">Financial Modeling</h2>
+                <p class="text-xs text-gray-600 dark:text-slate-400">Diversify organizational revenue alternatives and optimize internal cost parameters to protect and expand capital deployment footprint.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
