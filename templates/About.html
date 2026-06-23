@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-16 px-6">
+    <div class="mb-12 border-b border-gray-200 dark:border-slate-800 pb-8">
+        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-slate-50 mb-4">About Karita</h1>
+        <p class="text-xl text-gray-600 dark:text-slate-300 leading-relaxed">
+            Karita is a platform designed to provide strategic guidance to non-profit organizations, helping them amplify their positive social impact and improve their performance. Natively powered by generative AI embedded with strict operational guardrails, Karita guides community organizations through critical operational and planning milestones.
+        </p>
+        <!-- <p class="mt-4 text-base text-gray-600 dark:text-slate-400 font-semibold">
+            Our current deployment is initially focused on supporting non-profit organizations across the Greater Toronto Area (GTA), Ontario, Canada.
+        </p> -->
+    </div>
+
+    <div class="space-y-10">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-slate-100">Core Areas of Focus</h2>
+        <p class="text-gray-600 dark:text-slate-400 -mt-6 text-sm">
+            Karita delivers targeted guidance across four essential operational business pillars:
+        </p>
+
+        <!-- Strategy Pillar -->
+        <div class="bg-white dark:bg-slate-950 p-6 rounded border border-gray-200 dark:border-slate-800 transition-colors">
+            <h3 class="text-xl font-bold text-karitaGreen mb-3">Strategy & Planning</h3>
+            <p class="text-sm text-gray-600 dark:text-slate-300 mb-4">
+                We provide a comprehensive overview of your long-term goals and translate them into an actionable implementation plan. Karita brings valuable insights to tackle the specific systemic challenges your organization faces to help it achieve its full potential.
+            </p>
+            <ul class="list-disc pl-6 space-y-2 text-xs text-gray-600 dark:text-slate-400">
+                <li><strong>Vision and Mission Definition:</strong> Assistance re-defining your vision and mission to accurately represent your long-term organizational focus, alongside values statements that align perfectly.</li>
+                <li><strong>Strategy Development and Planning:</strong> Defining long-term objectives to establish clear strategic direction and building an actionable roadmap to achieve your potential.</li>
+                <li><strong>Growth Opportunity Assessment:</strong> Holistic, objective assessments of growth opportunities to support you in identifying where to invest time and resources, including feasibility studies of alternative options.</li>
+                <li><strong>Impact Analysis & Theory of Change:</strong> Defining exactly how your organization creates impact, identifying how to best measure it, and learning to communicate that impact to your stakeholders and the competitive landscape.</li>
+            </ul>
+        </div>
+
+        <!-- Marketing Pillar -->
+        <div class="bg-white dark:bg-slate-950 p-6 rounded border border-gray-200 dark:border-slate-800 transition-colors">
+            <h3 class="text-xl font-bold text-karitaBlue mb-3">Marketing Operations</h3>
+            <p class="text-sm text-gray-600 dark:text-slate-300 mb-4">
+                Maximize exposure and streamline community integration through clear outreach blueprints.
+            </p>
+            <ul class="list-disc pl-6 space-y-2 text-xs text-gray-600 dark:text-slate-400">
+                <li><strong>Branding and Communications:</strong> Developing your brand identity and tone for external communications to differentiate your non-profit, drive greater social impact, and articulate your unique value proposition.</li>
+                <li><strong>Stakeholder and Target Audience Analysis:</strong> Identifying and structuring communication for all key stakeholders (beneficiaries, clients, donors, and volunteers) to ensure their needs are satisfied and resources are allocated effectively.</li>
+                <li><strong>Channel and Outreach Strategy:</strong> Identifying the best delivery channels and most effective methods to reach your stakeholders, providing an optimized plan to increase impact and exposure.</li>
+            </ul>
+        </div>
+
+        <!-- Operational Effectiveness Pillar -->
+        <div class="bg-white dark:bg-slate-950 p-6 rounded border border-gray-200 dark:border-slate-800 transition-colors">
+            <h3 class="text-xl font-bold text-karitaGreen mb-3">Operational Effectiveness</h3>
+            <p class="text-sm text-gray-600 dark:text-slate-300 mb-4">
+                Align internal structures with community demands to optimize delivery mechanisms.
+            </p>
+            <ul class="list-disc pl-6 space-y-2 text-xs text-gray-600 dark:text-slate-400">
+                <li><strong>Target Operating Model:</strong> Defining the right organizational structure, internal processes, and talent requirements to achieve your long-term strategic objectives.</li>
+                <li><strong>Services Review:</strong> Reviewing current service offerings to help focus on your organization's core strengths, determine how to prioritize investments, and evaluate your delivery model to maximize community impact.</li>
+                <li><strong>Volunteer Finding & Engagement Strategy:</strong> Developing clear strategies to recruit, develop, engage, and retain dedicated volunteers crucial to achieving your organizational goals.</li>
+            </ul>
+        </div>
+
+        <!-- Financial Design Pillar -->
+        <div class="bg-white dark:bg-slate-950 p-6 rounded border border-gray-200 dark:border-slate-800 transition-colors">
+            <h3 class="text-xl font-bold text-karitaBlue mb-3">Sustainable Financial Design</h3>
+            <p class="text-sm text-gray-600 dark:text-slate-300 mb-4">
+                Build resilient funding structures and maintain cost compliance over extended execution horizons.
+            </p>
+            <ul class="list-disc pl-6 space-y-2 text-xs text-gray-600 dark:text-slate-400">
+                <li><strong>Revenue Diversification Analysis:</strong> Identifying new or alternative funding streams to drive meaningful impact, paired with communication blueprints to engage new donor agencies or individuals.</li>
+                <li><strong>Cost Optimization:</strong> Analyzing major expense line items and identifying effective operational levers to optimize your cost structure without sacrificing impact.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
