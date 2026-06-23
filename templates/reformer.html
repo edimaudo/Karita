@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-16 px-6">
+    <div class="mb-10 text-center">
+        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-slate-50 mb-4">Problem Framer</h1>
+        <p class="text-gray-600 dark:text-slate-300">Select your area of focus and describe the challenge. Karita will structure it for analysis.</p>
+    </div>
+
+    <div class="bg-white dark:bg-slate-950 rounded-lg p-8 shadow-sm border border-gray-200 dark:border-slate-800">
+        
+        <div class="flex gap-4 mb-6">
+            <div class="flex-1">
+                <label for="serviceSelect" class="block text-sm font-semibold mb-2">Service Area</label>
+                <select id="serviceSelect" onchange="updateSubServices()" class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-4 py-2 focus:ring-2 focus:ring-karitaBlue outline-none">
+                    <option value="">Select a Pillar...</option>
+                    <option value="strategy">Strategy</option>
+                    <option value="marketing">Marketing</option>
+                    <option value="operations">Operational Effectiveness</option>
+                    <option value="financial">Financial Modeling</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="flex-1">
+                <label for="subServiceSelect" class="block text-sm font-semibold mb-2">Specific Focus</label>
+                <select id="subServiceSelect" class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-4 py-2 focus:ring-2 focus:ring-karitaBlue outline-none" disabled>
+                    <option value="">Awaiting Service Selection...</option>
+                </select>
+            </div>
+        </div>
+
+        <label for="messyInput" class="block text-sm font-semibold mb-2">Describe the Issue</label>
+        <textarea id="messyInput" rows="6" class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded p-4 mb-6 focus:ring-2 focus:ring-karitaBlue outline-none" placeholder="Provide as much context as possible..."></textarea>
+        
+        <button id="frameBtn" onclick="submitToFramer()" class="w-full bg-karitaGreen text-white font-bold py-3 rounded hover:bg-green-700 transition focus:ring-2 focus:ring-green-400 outline-none">
+            Reframe Problem
+        </button>
+    </div>
+
+    <div id="reviewSection" class="hidden mt-8 bg-blue-50 dark:bg-slate-900 rounded-lg p-8 border border-blue-200 dark:border-slate-800">
+        <h2 class="text-xl font-bold text-karitaBlue mb-2">Reframed Statement</h2>
+        <p class="mb-4 text-sm">Review the structured problem below before sending it to the Solution Design agents.</p>
+        
+        <textarea id="cleanProblem" rows="5" class="w-full bg-white dark:bg-slate-950 border border-blue-300 dark:border-slate-700 rounded p-4 mb-4 focus:ring-2 focus:ring-karitaBlue outline-none"></textarea>
+        
+        <button onclick="approveAndProceed()" class="w-full bg-karitaBlue text-white font-bold py-3 rounded hover:bg-blue-700 transition">
+            Approve & Generate Solution
+        </button>
+    </div>
+</div>
+
+<script>
+    const subServices = {
+        strategy: ["Vision and Mission Definition", "Strategy Development and Planning", "Growth Opportunity Assessment", "Impact Analysis"],
+        marketing: ["Branding and Communications", "Stakeholder and Target Audience Analysis", "Channel Outreach and Strategy"],
+        operations: ["Target Operating Model", "Services Review", "Volunteer finding & Engagement Strategy"],
+        financial: ["Revenue Diversification Analysis", "Cost Optimization"],
+        other: ["Other"]
+    };
+
+    function updateSubServices() {
+        const service = document.getElementById('serviceSelect').value;
+        const subSelect = document.getElementById('subServiceSelect');
+        
+        subSelect.innerHTML = '';
+        if (service && subServices[service]) {
+            subSelect.disabled = false;
+            subServices[service].forEach(item => {
+                const option = document.createElement('option');
+                option.value = item;
+                option.textContent = item;
+                subSelect.appendChild(option);
+            });
+        } else {
+            subSelect.disabled = true;
+            subSelect.innerHTML = '<option value="">Awaiting Service Selection...</option>';
+        }
+    }
+
+    async function submitToFramer() {
+        const service = document.getElementById('serviceSelect').value;
+        const sub_service = document.getElementById('subServiceSelect').value;
+        const problem = document.getElementById('messyInput').value;
+        const btn = document.getElementById('frameBtn');
+
+        if (!service || !problem) return alert("Please select a service and describe the issue.");
+
+        btn.innerText = "Analyzing Context...";
+        btn.disabled = true;
+
+        try {
+            const response = await fetch('/reframe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ service, sub_service, problem })
+            });
+            const data = await response.json();
+
+            if(data.success) {
+                document.getElementById('cleanProblem').value = data.framedProblem;
+                document.getElementById('reviewSection').classList.remove('hidden');
+            }
+        } catch (error) {
+            alert("Connection error.");
+        } finally {
+            btn.innerText = "Reframe Problem";
+            btn.disabled = false;
+        }
+    }
+
+    function approveAndProceed() {
+        const cleanProblemText = document.getElementById('cleanProblem').value;
+        localStorage.setItem('karita_clean_problem', cleanProblemText);
+        window.location.href = "/solution-design";
+    }
+</script>
+{% endblock %}
