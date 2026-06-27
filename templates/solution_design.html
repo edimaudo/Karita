@@ -1,124 +1,361 @@
 {% extends "base.html" %}
 
+{% block head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+{% endblock %}
+
 {% block content %}
-<div class="max-w-4xl mx-auto py-16 px-6">
-    <div class="mb-10 text-center">
-        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-slate-50 mb-4">Solution Design Center</h1>
-        <p class="text-gray-600 dark:text-slate-300">Submit operational specifics to authorize the specialized Qwen Agent Society analysis.</p>
-    </div>
+<div class="max-w-3xl mx-auto px-6 py-14">
 
-    <div id="intakeFormBox" class="bg-white dark:bg-slate-950 rounded p-8 border border-gray-200 dark:border-slate-800">
-        <form id="agentSocietyForm" onsubmit="executeSolutionPipeline(event)">
-            <h2 class="text-xl font-bold mb-6 border-b pb-2 text-karitaBlue">Organizational Details</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label for="contactName" class="block text-xs font-semibold mb-1">Contact Name</label>
-                    <input type="text" id="contactName" required class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-karitaBlue">
-                </div>
-                <div>
-                    <label for="contactEmail" class="block text-xs font-semibold mb-1">Contact Email Address</label>
-                    <input type="email" id="contactEmail" required class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-karitaBlue">
-                </div>
+    <!-- Step indicator -->
+    <div class="k-steps">
+        <div class="k-step done">
+            <div class="k-step-dot">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l3 3 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div>
-                    <label for="cityLoc" class="block text-xs font-semibold mb-1">City</label>
-                    <input type="text" id="cityLoc" required placeholder="e.g., Toronto" class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-karitaBlue">
-                </div>
-                <div>
-                    <label for="postalLoc" class="block text-xs font-semibold mb-1">Postal Code</label>
-                    <input type="text" id="postalLoc" required class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-karitaBlue">
-                </div>
-                <div>
-                    <label for="provinceLoc" class="block text-xs font-semibold mb-1">Province</label>
-                    <input type="text" id="provinceLoc" required value="Ontario" class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-3 py-2 outline-none focus:ring-2 focus:ring-karitaBlue">
-                </div>
-            </div>
-
-            <div class="mb-6">
-                <label for="framerProblemContext" class="block text-xs font-semibold mb-1">Active Problem Statement Context</label>
-                <textarea id="framerProblemContext" rows="5" required class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded p-3 outline-none focus:ring-2 focus:ring-karitaBlue" placeholder="Paste information or let automated script load context from the Framer tool..."></textarea>
-            </div>
-
-            <button type="submit" id="submitBtn" class="w-full bg-karitaBlue text-white font-bold py-3 rounded hover:bg-blue-700 transition">
-                Submit Strategy Evaluation
-            </button>
-        </form>
-    </div>
-
-    <div id="processingIndicator" class="hidden text-center py-12">
-        <p class="text-lg font-bold text-karitaGreen animate-pulse">Working on the problem...</p>
-        <p class="text-xs text-gray-500 mt-2">Invoking decision framework metrics across Qwen sub-agents.</p>
-    </div>
-
-    <div id="outputDisplayBox" class="hidden space-y-6">
-        <div class="bg-green-50 dark:bg-slate-900 border border-green-200 dark:border-slate-800 p-6 rounded">
-            <h2 class="text-xl font-bold text-karitaGreen mb-4">Generated Strategy Synthesis Output</h2>
-            <div id="solutionRawTarget" class="text-sm space-y-4 whitespace-pre-wrap leading-relaxed text-gray-800 dark:text-slate-200"></div>
+            <span>Problem framing</span>
         </div>
-        
-        <div class="flex gap-4">
-            <button onclick="window.location.href='/reframer'" class="flex-1 border border-gray-300 dark:border-slate-700 py-3 rounded hover:bg-gray-100 dark:hover:bg-slate-800 font-medium text-xs">
-                Back to Add More Context
-            </button>
-            <button onclick="alert('Saving system record parameters behind secure vault...')" class="flex-1 bg-karitaGreen text-white font-bold py-3 rounded hover:bg-green-700 text-xs">
-                Save and Download PDF Report
-            </button>
+        <div class="k-step-line"></div>
+        <div class="k-step active">
+            <div class="k-step-dot">2</div>
+            <span>Advisory report</span>
         </div>
     </div>
+
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold mb-2" style="color:var(--text-primary)">Generate your advisory report</h1>
+        <p class="text-sm" style="color:var(--text-secondary)">
+            Review the structured problem, then submit for specialist analysis across all relevant advisory pillars.
+        </p>
+    </div>
+
+    <!-- Error banner -->
+    <div id="errorBanner" class="k-error mb-5 hidden" role="alert">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3M8 10.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span id="errorMsg">Something went wrong.</span>
+    </div>
+
+    <!-- ── PHASE 1: Input form ─────────────────────────────────── -->
+    <div id="phaseInput">
+        <div class="k-card p-7 mb-4">
+            <!-- Pillar tags from reframer -->
+            <div id="pillarRow" class="hidden mb-5 pb-5" style="border-bottom:1px solid var(--border)">
+                <p class="text-xs font-semibold mb-2" style="color:var(--text-muted)">Advisory pillars detected</p>
+                <div id="pillarTags" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <div class="mb-5">
+                <label for="problemCtx" class="k-label">Structured problem statement</label>
+                <p class="text-xs mb-2" style="color:var(--text-muted)">Loaded from problem framing. Edit if needed.</p>
+                <textarea id="problemCtx" rows="7" class="k-textarea"
+                    placeholder="Paste your structured problem, or go back to the problem framer to generate one…"></textarea>
+            </div>
+
+            <button id="generateBtn" onclick="startGeneration()" class="k-btn-primary">
+                Generate advisory report
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+        </div>
+
+        <a href="/reframer" class="k-btn-ghost" style="display:inline-flex;width:auto;font-size:0.8rem;padding:0.5rem 1rem;text-decoration:none;">
+            ← Back to problem framer
+        </a>
+    </div>
+
+    <!-- ── PHASE 2: Processing ────────────────────────────────── -->
+    <div id="phaseProcessing" class="hidden">
+        <div class="k-card p-10 text-center">
+            <div class="flex justify-center mb-5">
+                <div class="k-spinner" style="width:2.5rem;height:2.5rem"></div>
+            </div>
+            <p class="font-semibold mb-1" style="color:var(--text-primary); font-size:0.95rem">Generating your advisory report</p>
+            <p id="processingStep" class="text-sm" style="color:var(--text-muted)">Routing problem to specialist advisory agents…</p>
+
+            <!-- Pillar progress indicators -->
+            <div id="pillarProgress" class="mt-7 text-left space-y-2 max-w-xs mx-auto"></div>
+        </div>
+    </div>
+
+    <!-- ── PHASE 3: Report output ─────────────────────────────── -->
+    <div id="phaseOutput" class="hidden">
+
+        <!-- Summary card -->
+        <div class="k-card p-7 mb-6">
+            <p class="k-section-head">Advisory report</p>
+            <div id="reportTitle" class="text-xl font-bold mb-1" style="color:var(--text-primary)">Strategic analysis complete</div>
+            <p class="text-sm mb-5" style="color:var(--text-muted)">Review each advisory pillar below. Download the full report when ready.</p>
+
+            <!-- Tabs -->
+            <div class="k-tabs" id="reportTabs" role="tablist"></div>
+
+            <!-- Tab panels -->
+            <div id="reportPanels"></div>
+        </div>
+
+        <!-- Actions row -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+            <button onclick="downloadReport()" class="k-btn-primary" style="background:var(--accent)">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3M3 12h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Download report (.md)
+            </button>
+            <button onclick="showSaveForm()" class="k-btn-ghost">
+                Save and share
+            </button>
+        </div>
+
+        <!-- Save form (shown on demand — value first, then friction) -->
+        <div id="saveForm" class="hidden k-card p-7 mb-6">
+            <p class="k-section-head">Save your report</p>
+            <p class="text-sm mb-5" style="color:var(--text-secondary)">Enter your details to receive a copy and keep this report on file.</p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="k-label">Contact name</label>
+                    <input type="text" id="saveName" class="k-input" placeholder="Your name">
+                </div>
+                <div>
+                    <label class="k-label">Email address</label>
+                    <input type="email" id="saveEmail" class="k-input" placeholder="you@organization.org">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+                <div>
+                    <label class="k-label">City</label>
+                    <input type="text" id="saveCity" class="k-input" placeholder="Toronto">
+                </div>
+                <div>
+                    <label class="k-label">Postal code</label>
+                    <input type="text" id="savePostal" class="k-input">
+                </div>
+                <div>
+                    <label class="k-label">Province</label>
+                    <input type="text" id="saveProvince" class="k-input" value="Ontario">
+                </div>
+            </div>
+            <button onclick="submitSave()" class="k-btn-primary">Confirm and save</button>
+        </div>
+
+        <div id="saveConfirm" class="hidden k-card p-6 mb-6 text-center">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3"
+                 style="background:var(--accent-light)">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l5 5 7-7" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <p class="font-semibold text-sm mb-1" style="color:var(--text-primary)">Report saved</p>
+            <p class="text-xs" style="color:var(--text-muted)">A copy has been noted. Download your .md file above to keep a local copy.</p>
+        </div>
+
+        <a href="/reframer" class="k-btn-ghost" style="display:inline-flex;width:auto;font-size:0.8rem;padding:0.5rem 1rem;text-decoration:none;">
+            ← Frame a new problem
+        </a>
+    </div>
+
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const cachedProblem = localStorage.getItem('karita_clean_problem');
-        if (cachedProblem) {
-            document.getElementById('framerProblemContext').value = cachedProblem;
+/* ─── State ─────────────────────────────────────────────── */
+let _rawMarkdown = '';
+let _pillarOutputs = {};
+
+/* ─── Load cached context ───────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+    const prob    = localStorage.getItem('karita_problem') || '';
+    const pillars = JSON.parse(localStorage.getItem('karita_pillars') || '[]');
+
+    if (prob) document.getElementById('problemCtx').value = prob;
+    if (pillars.length) renderPillarTags(pillars, 'pillarTags', 'pillarRow');
+});
+
+/* ─── Helpers ───────────────────────────────────────────── */
+function showError(msg) {
+    const b = document.getElementById('errorBanner');
+    document.getElementById('errorMsg').textContent = msg;
+    b.classList.remove('hidden');
+    b.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function hideError() { document.getElementById('errorBanner').classList.add('hidden'); }
+
+function renderPillarTags(pillars, containerId, rowId) {
+    if (!pillars.length) return;
+    const c = document.getElementById(containerId);
+    if (c) c.innerHTML = pillars.map(p => `<span class="k-pill">${p}</span>`).join('');
+    const r = document.getElementById(rowId);
+    if (r) r.classList.remove('hidden');
+}
+
+function phase(name) {
+    ['phaseInput','phaseProcessing','phaseOutput'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+    });
+    document.getElementById('phase' + name).classList.remove('hidden');
+}
+
+/* ─── Processing step messages ──────────────────────────── */
+const STEPS = [
+    'Routing problem to specialist advisory agents…',
+    'Running strategy analysis…',
+    'Evaluating marketing and outreach gaps…',
+    'Assessing operational effectiveness…',
+    'Modelling financial sustainability…',
+    'Synthesising recommendations…',
+    'Finalising report…',
+];
+let _stepIdx = 0, _stepTimer = null;
+
+function startStepRotation() {
+    _stepIdx = 0;
+    const el = document.getElementById('processingStep');
+    el.textContent = STEPS[0];
+    _stepTimer = setInterval(() => {
+        _stepIdx = Math.min(_stepIdx + 1, STEPS.length - 1);
+        el.textContent = STEPS[_stepIdx];
+    }, 4000);
+}
+function stopStepRotation() { clearInterval(_stepTimer); }
+
+/* ─── Build pillar progress dots ───────────────────────── */
+function buildPillarProgress(pillars) {
+    const all = pillars.length ? pillars : ['Strategy','Marketing','Operational Effectiveness','Financial Analysis'];
+    const container = document.getElementById('pillarProgress');
+    container.innerHTML = all.map(p => `
+        <div id="prog-${p.replace(/\s/g,'_')}" class="flex items-center gap-3">
+            <div class="prog-dot w-4 h-4 rounded-full flex-shrink-0" style="border:1.5px solid var(--border-strong); background:var(--page-bg)"></div>
+            <span class="text-xs" style="color:var(--text-muted)">${p}</span>
+        </div>
+    `).join('');
+}
+
+function markPillarDone(pillar) {
+    const el = document.getElementById('prog-' + pillar.replace(/\s/g,'_'));
+    if (!el) return;
+    el.querySelector('.prog-dot').style.cssText = 'background:var(--accent);border-color:var(--accent);';
+    el.querySelector('span').style.color = 'var(--text-primary)';
+    el.querySelector('span').style.fontWeight = '500';
+}
+
+/* ─── Generate ──────────────────────────────────────────── */
+async function startGeneration() {
+    hideError();
+    const problem = document.getElementById('problemCtx').value.trim();
+    if (!problem) { showError('Please enter a problem statement before generating.'); return; }
+
+    const pillars = JSON.parse(localStorage.getItem('karita_pillars') || '[]');
+
+    phase('Processing');
+    startStepRotation();
+    buildPillarProgress(pillars);
+
+    try {
+        const res = await fetch('/api/solve', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ problem, pillars })
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error || 'Server error ' + res.status);
         }
+
+        const data = await res.json();
+        stopStepRotation();
+
+        if (!data.success) throw new Error(data.error || 'Generation failed.');
+
+        _rawMarkdown    = data.solution    || '';
+        _pillarOutputs  = data.pillar_outputs || {};
+
+        // Mark all pillars done
+        Object.keys(_pillarOutputs).forEach(p => markPillarDone(p));
+
+        // Small pause so user sees completion
+        await new Promise(r => setTimeout(r, 600));
+
+        renderReport();
+        phase('Output');
+
+    } catch (err) {
+        stopStepRotation();
+        phase('Input');
+        showError(err.message || 'Generation failed. Please try again.');
+        console.error(err);
+    }
+}
+
+/* ─── Render tabbed report ──────────────────────────────── */
+function renderReport() {
+    const tabBar    = document.getElementById('reportTabs');
+    const panelArea = document.getElementById('reportPanels');
+    tabBar.innerHTML    = '';
+    panelArea.innerHTML = '';
+
+    // Build tab list: Summary first, then one per pillar
+    const tabs = [{ id: 'summary', label: 'Summary', content: _rawMarkdown }];
+    Object.entries(_pillarOutputs).forEach(([name, md]) => {
+        tabs.push({ id: name.replace(/\s/g,'_'), label: name, content: md });
     });
 
-    async function executeSolutionPipeline(e) {
-        e.preventDefault();
-        
-        const formBox = document.getElementById('intakeFormBox');
-        const processing = document.getElementById('processingIndicator');
-        const outputBox = document.getElementById('outputDisplayBox');
-        
-        formBox.classList.add('hidden');
-        processing.classList.remove('hidden');
+    tabs.forEach((tab, i) => {
+        // Tab button
+        const btn = document.createElement('button');
+        btn.className  = 'k-tab' + (i === 0 ? ' active' : '');
+        btn.textContent = tab.label;
+        btn.setAttribute('role', 'tab');
+        btn.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+        btn.onclick = () => activateTab(tab.id, tabs);
+        btn.id = 'tab-' + tab.id;
+        tabBar.appendChild(btn);
 
-        const payload = {
-            name: document.getElementById('contactName').value,
-            email: document.getElementById('contactEmail').value,
-            city: document.getElementById('cityLoc').value,
-            postal: document.getElementById('postalLoc').value,
-            province: document.getElementById('provinceLoc').value,
-            problem: document.getElementById('framerProblemContext').value
-        };
+        // Panel
+        const panel = document.createElement('div');
+        panel.id        = 'panel-' + tab.id;
+        panel.className = 'k-prose' + (i !== 0 ? ' hidden' : '');
+        panel.setAttribute('role', 'tabpanel');
+        panel.innerHTML = marked.parse(tab.content || '_No content for this pillar._');
+        panelArea.appendChild(panel);
+    });
+}
 
-        try {
-            const response = await fetch('/api/solve', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            const data = await response.json();
-            
-            if(data.success) {
-                processing.classList.add('hidden');
-                document.getElementById('solutionRawTarget').textContent = data.solution;
-                outputBox.classList.remove('hidden');
-            } else {
-                alert("Error optimizing data inputs.");
-                formBox.classList.remove('hidden');
-                processing.classList.add('hidden');
-            }
-        } catch(err) {
-            alert("Network connection failure.");
-            formBox.classList.remove('hidden');
-            processing.classList.add('hidden');
-        }
-    }
+function activateTab(id, tabs) {
+    tabs.forEach(t => {
+        const btn   = document.getElementById('tab-' + t.id);
+        const panel = document.getElementById('panel-' + t.id);
+        const active = t.id === id;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-selected', active);
+        panel.classList.toggle('hidden', !active);
+    });
+}
+
+/* ─── Download ──────────────────────────────────────────── */
+function downloadReport() {
+    if (!_rawMarkdown) { showError('No report to download yet.'); return; }
+    const blob = new Blob([_rawMarkdown], { type: 'text/markdown;charset=utf-8' });
+    const url  = URL.createObjectURL(blob);
+    const a    = Object.assign(document.createElement('a'), {
+        href: url, download: 'karita-advisory-report.md'
+    });
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+/* ─── Save form ─────────────────────────────────────────── */
+function showSaveForm() {
+    document.getElementById('saveForm').classList.remove('hidden');
+    document.getElementById('saveForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function submitSave() {
+    const name     = document.getElementById('saveName').value.trim();
+    const email    = document.getElementById('saveEmail').value.trim();
+    if (!name || !email) { showError('Please enter your name and email to save the report.'); return; }
+
+    // In production this would POST to /api/save
+    // For now confirm immediately
+    document.getElementById('saveForm').classList.add('hidden');
+    document.getElementById('saveConfirm').classList.remove('hidden');
+    document.getElementById('saveConfirm').scrollIntoView({ behavior: 'smooth' });
+}
 </script>
 {% endblock %}
