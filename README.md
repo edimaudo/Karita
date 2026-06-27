@@ -17,6 +17,4 @@ karita/
 │   ├── solution_design.html
 │   └── 404.html
 └── static/
-    └── css/
-        └── styles.css
 ```
