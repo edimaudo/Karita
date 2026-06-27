@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,111 +11,349 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        karitaGreen: '#16a34a',
-                        karitaBlue: '#2563eb'
-                    }
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
                 }
             }
         }
     </script>
     <style>
-        body { transition: background-color 0.2s ease, color 0.2s ease, font-size 0.15s ease; }
-        /* Strict WCAG scaling */
-        body.font-size-small { font-size: 8px !important; }
-        body.font-size-medium { font-size: 14px !important; }
-        body.font-size-large { font-size: 28px !important; }
-        
-        /* Sticky header offset for in-page anchors */
-        html { scroll-padding-top: 5rem; } 
+        /*
+         * DESIGN SYSTEM
+         * Single accent: Forest green #1a7a4a
+         * All sizing uses rem so the font-size root scale propagates everywhere.
+         * Dark mode uses explicit CSS variables that flip — no relying on Tailwind
+         * dark: prefixes for colors that need true inversion.
+         */
+
+        :root {
+            --accent:        #1a7a4a;
+            --accent-hover:  #155f3a;
+            --accent-light:  #e8f5ee;
+            --accent-border: #a7d9be;
+
+            --page-bg:       #f8f9fa;
+            --surface:       #ffffff;
+            --surface-raised:#ffffff;
+            --border:        #e2e6ea;
+            --border-strong: #ced4da;
+
+            --text-primary:  #111827;
+            --text-secondary:#4b5563;
+            --text-muted:    #9ca3af;
+
+            --error-bg:      #fef2f2;
+            --error-border:  #fecaca;
+            --error-text:    #b91c1c;
+
+            --font-size-base: 15px;
+        }
+
+        html.dark {
+            --page-bg:       #0f1117;
+            --surface:       #1a1d27;
+            --surface-raised:#1f2333;
+            --border:        #2d3348;
+            --border-strong: #3d4460;
+
+            --text-primary:  #f1f3f5;
+            --text-secondary:#9ba3b5;
+            --text-muted:    #5c6480;
+
+            --accent-light:  #0f2d1e;
+            --accent-border: #1f5c38;
+
+            --error-bg:      #1f1011;
+            --error-border:  #7f1d1d;
+            --error-text:    #fca5a5;
+        }
+
+        /* ── Font scale: one root rule, everything rem-based inherits it ── */
+        html { font-size: var(--font-size-base); scroll-padding-top: 5rem; }
+        html.text-sm  { --font-size-base: 13px; }
+        html.text-md  { --font-size-base: 15px; }
+        html.text-lg  { --font-size-base: 18px; }
+
+        body {
+            background-color: var(--page-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Nav ── */
+        .k-nav {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 50;
+        }
+        .k-nav a, .k-nav button { color: var(--text-secondary); }
+        .k-nav a:hover            { color: var(--accent); }
+        .k-logo                   { color: var(--accent) !important; }
+
+        /* ── Cards / surfaces ── */
+        .k-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+        }
+        .k-card-raised {
+            background: var(--surface-raised);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+        }
+
+        /* ── Form controls ── */
+        .k-input, .k-select, .k-textarea {
+            width: 100%;
+            background: var(--page-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-strong);
+            border-radius: 0.5rem;
+            padding: 0.6rem 0.875rem;
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .k-input:focus, .k-select:focus, .k-textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(26,122,74,0.15);
+        }
+        .k-input::placeholder, .k-textarea::placeholder { color: var(--text-muted); }
+        .k-select option { background: var(--surface); color: var(--text-primary); }
+        .k-select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* ── Buttons ── */
+        .k-btn-primary {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            background: var(--accent);
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.7rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+            width: 100%;
+        }
+        .k-btn-primary:hover   { background: var(--accent-hover); }
+        .k-btn-primary:active  { transform: scale(0.98); }
+        .k-btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+        .k-btn-primary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+        .k-btn-ghost {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.875rem;
+            padding: 0.65rem 1.25rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-strong);
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            width: 100%;
+        }
+        .k-btn-ghost:hover { background: var(--page-bg); color: var(--text-primary); }
+        .k-btn-ghost:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+        /* ── Labels ── */
+        .k-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.01em;
+        }
+
+        /* ── Error banner ── */
+        .k-error {
+            background: var(--error-bg);
+            border: 1px solid var(--error-border);
+            color: var(--error-text);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        /* ── Step indicator ── */
+        .k-steps { display: flex; align-items: center; gap: 0; margin-bottom: 2rem; }
+        .k-step {
+            display: flex; align-items: center; gap: 0.5rem;
+            font-size: 0.8rem; font-weight: 500; color: var(--text-muted);
+        }
+        .k-step.active { color: var(--accent); }
+        .k-step.done   { color: var(--text-secondary); }
+        .k-step-dot {
+            width: 1.5rem; height: 1.5rem; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem; font-weight: 700;
+            border: 2px solid var(--border-strong);
+            color: var(--text-muted);
+            background: var(--surface);
+            flex-shrink: 0;
+        }
+        .k-step.active .k-step-dot {
+            background: var(--accent); border-color: var(--accent); color: #fff;
+        }
+        .k-step.done .k-step-dot {
+            background: var(--accent-light); border-color: var(--accent-border); color: var(--accent);
+        }
+        .k-step-line {
+            flex: 1; height: 1px; background: var(--border); margin: 0 0.5rem;
+            max-width: 3rem;
+        }
+
+        /* ── Pill tags ── */
+        .k-pill {
+            display: inline-block;
+            font-size: 0.7rem; font-weight: 600;
+            padding: 0.2rem 0.65rem;
+            border-radius: 99px;
+            background: var(--accent-light);
+            color: var(--accent);
+            border: 1px solid var(--accent-border);
+        }
+
+        /* ── Tabs ── */
+        .k-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; overflow-x: auto; }
+        .k-tab {
+            padding: 0.65rem 1.1rem;
+            font-size: 0.85rem; font-weight: 500;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            cursor: pointer; white-space: nowrap;
+            background: none; border-top: none; border-left: none; border-right: none;
+            transition: color 0.15s;
+        }
+        .k-tab:hover  { color: var(--text-secondary); }
+        .k-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+        /* ── Output section accent line ── */
+        .k-section-head {
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        /* ── Prose output (rendered markdown) ── */
+        .k-prose h2 { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 1.5rem 0 0.5rem; }
+        .k-prose h3 { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); margin: 1.1rem 0 0.4rem; }
+        .k-prose p  { color: var(--text-secondary); line-height: 1.75; margin-bottom: 0.75rem; font-size: 0.9rem; }
+        .k-prose ul, .k-prose ol { padding-left: 1.25rem; margin-bottom: 0.75rem; }
+        .k-prose li { color: var(--text-secondary); line-height: 1.7; margin-bottom: 0.25rem; font-size: 0.9rem; }
+        .k-prose strong { color: var(--text-primary); font-weight: 600; }
+        .k-prose h2:first-child { margin-top: 0; }
+
+        /* ── Spinner ── */
+        @keyframes k-spin { to { transform: rotate(360deg); } }
+        .k-spinner {
+            width: 2rem; height: 2rem; border-radius: 50%;
+            border: 2.5px solid var(--border-strong);
+            border-top-color: var(--accent);
+            animation: k-spin 0.7s linear infinite;
+        }
+
+        /* ── Font size controls active state ── */
+        .size-btn.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            margin-top: auto;
+        }
     </style>
     {% block head %}{% endblock %}
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex flex-col min-h-screen font-size-medium">
-    
-    <nav class="border-b border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 sticky top-0 z-50 transition-colors">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-            <a href="/" class="text-2xl font-bold text-karitaGreen focus:ring-2 focus:ring-karitaBlue focus:outline-none rounded-md">Karita</a>
-            
-            <div class="flex items-center space-x-6 text-sm font-medium text-gray-600 dark:text-slate-300">
-                <div class="hidden lg:flex space-x-6">
-                    <!-- <span class="text-gray-400">Pillars:</span>
-                    <a href="/#strategy" class="hover:text-karitaBlue focus:ring-2 focus:ring-karitaBlue focus:outline-none rounded-md">Strategy</a>
-                    <a href="/#marketing" class="hover:text-karitaBlue focus:ring-2 focus:ring-karitaBlue focus:outline-none rounded-md">Marketing</a>
-                    <a href="/#operations" class="hover:text-karitaBlue focus:ring-2 focus:ring-karitaBlue focus:outline-none rounded-md">Operations</a>
-                    <a href="/#finance" class="hover:text-karitaBlue focus:ring-2 focus:ring-karitaBlue focus:outline-none rounded-md">Financial</a>
-                    <span class="h-4 w-px bg-gray-300 dark:bg-slate-700" aria-hidden="true"></span> -->
-                    <a href="/about" class="hover:text-karitaBlue focus:ring-2 focus:ring-karitaBlue focus:outline-none rounded-md">About</a>
+<body>
+    <nav class="k-nav">
+        <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="/" class="k-logo text-xl font-bold tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2" style="color:var(--accent)">
+                Karita
+            </a>
+
+            <div class="flex items-center gap-5">
+                <a href="/about" class="text-sm font-medium transition-colors" style="color:var(--text-secondary);"
+                   onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">
+                    About
+                </a>
+
+                <!-- Font size -->
+                <div class="flex items-center gap-1 rounded-lg p-1" style="background:var(--page-bg); border:1px solid var(--border);" role="group" aria-label="Text size">
+                    <button onclick="setFontSize('sm')" id="sz-sm" class="size-btn px-2 py-1 rounded text-xs transition-colors" style="color:var(--text-secondary)" aria-label="Small text">A−</button>
+                    <button onclick="setFontSize('md')" id="sz-md" class="size-btn px-2 py-1 rounded text-sm transition-colors active" style="color:var(--text-secondary)" aria-label="Default text">A</button>
+                    <button onclick="setFontSize('lg')" id="sz-lg" class="size-btn px-2 py-1 rounded text-base transition-colors" style="color:var(--text-secondary)" aria-label="Large text">A+</button>
                 </div>
 
-                <div class="flex items-center space-x-4">
-                    <div class="flex items-center space-x-1 bg-gray-100 dark:bg-slate-800 p-1 rounded-lg" role="group" aria-label="Font sizing profile rules">
-                        <button onclick="setFontSize('small')" id="btn-size-small" class="px-2 py-1 text-xs rounded hover:bg-white dark:hover:bg-slate-700 transition focus:ring-2 focus:ring-karitaBlue focus:outline-none">A-</button>
-                        <button onclick="setFontSize('medium')" id="btn-size-medium" class="px-2 py-1 text-xs rounded bg-white dark:bg-slate-600 font-bold transition focus:ring-2 focus:ring-karitaBlue focus:outline-none">A</button>
-                        <button onclick="setFontSize('large')" id="btn-size-large" class="px-2 py-1 text-xs rounded hover:bg-white dark:hover:bg-slate-700 transition focus:ring-2 focus:ring-karitaBlue focus:outline-none">A+</button>
-                    </div>
-
-                    <button onclick="toggleTheme()" id="theme-toggle-btn" class="px-3 py-1 text-xs font-semibold rounded-lg bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 transition focus:ring-2 focus:ring-karitaBlue focus:outline-none">
-                        Dark Mode
-                    </button>
-                </div>
+                <!-- Dark mode -->
+                <button id="theme-btn" onclick="toggleTheme()"
+                    class="text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
+                    style="background:var(--page-bg); border:1px solid var(--border); color:var(--text-secondary);">
+                    Dark mode
+                </button>
             </div>
         </div>
     </nav>
 
-    <main class="flex-grow">
+    <main style="flex:1">
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-white dark:bg-slate-950 border-t border-gray-200 dark:border-slate-800 py-8 transition-colors mt-auto">
-        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center text-gray-500 dark:text-slate-400 text-sm">
+    <footer class="py-6">
+        <div class="max-w-5xl mx-auto px-6 flex justify-between items-center text-sm" style="color:var(--text-muted)">
             <span>&copy; 2026 Karita</span>
-            <!-- <span>Toronto, ON</span> -->
+            <span>Strategic advisory for non-profits</span>
         </div>
     </footer>
 
     <script>
+        /* ── Theme ── */
         function toggleTheme() {
-            const html = document.documentElement;
-            const btn = document.getElementById('theme-toggle-btn');
-            
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                btn.innerText = "Dark Mode";
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                btn.innerText = "Light Mode";
-            }
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('k-theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-btn').textContent = isDark ? 'Light mode' : 'Dark mode';
         }
 
+        /* ── Font size ── apply to <html> so rem cascades everywhere ── */
         function setFontSize(size) {
-            const body = document.body;
-            body.classList.remove('font-size-small', 'font-size-medium', 'font-size-large');
-            body.classList.add(`font-size-${size}`);
-            localStorage.setItem('fontSizePreference', size);
-            
-            ['small', 'medium', 'large'].forEach(s => {
-                const btn = document.getElementById(`btn-size-${s}`);
-                if(s === size) {
-                    btn.classList.add('bg-white', 'dark:bg-slate-600', 'font-bold');
-                } else {
-                    btn.classList.remove('bg-white', 'dark:bg-slate-600', 'font-bold');
-                }
-            });
+            const html = document.documentElement;
+            html.classList.remove('text-sm', 'text-md', 'text-lg');
+            html.classList.add('text-' + size);
+            localStorage.setItem('k-font', size);
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('sz-' + size).classList.add('active');
         }
 
-        (function() {
-            const cachedTheme = localStorage.getItem('theme');
-            const btn = document.getElementById('theme-toggle-btn');
-            if (cachedTheme === 'dark' || (!cachedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        /* ── Init on load ── */
+        (function () {
+            const theme = localStorage.getItem('k-theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (theme === 'dark' || (!theme && prefersDark)) {
                 document.documentElement.classList.add('dark');
-                if(btn) btn.innerText = "Light Mode";
+                const btn = document.getElementById('theme-btn');
+                if (btn) btn.textContent = 'Light mode';
             }
-            const cachedSize = localStorage.getItem('fontSizePreference') || 'medium';
-            window.addEventListener('DOMContentLoaded', () => setFontSize(cachedSize));
+
+            const font = localStorage.getItem('k-font') || 'md';
+            document.documentElement.classList.add('text-' + font);
+            window.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+                const el = document.getElementById('sz-' + font);
+                if (el) el.classList.add('active');
+            });
         })();
     </script>
 </body>
