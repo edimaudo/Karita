@@ -1,47 +1,54 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-6 py-20">
-    <div class="text-center max-w-3xl mx-auto mb-20">
-        <h1 class="text-5xl font-extrabold tracking-tight text-gray-900 dark:text-slate-50 mb-6">
-            Strategic Advisory for Non-Profits
+<div class="max-w-5xl mx-auto px-6 py-20">
+
+    <!-- Hero -->
+    <div class="text-center max-w-2xl mx-auto mb-16">
+        <!-- <div class="inline-block mb-5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide"
+             style="background:var(--accent-light); color:var(--accent); border:1px solid var(--accent-border);">
+            Greater Toronto Area Non-Profits
+        </div> -->
+        <h1 class="text-4xl font-bold tracking-tight mb-5" style="color:var(--text-primary); line-height:1.2;">
+            Strategic advisory,<br>built for community impact
         </h1>
-        <p class="text-lg text-gray-600 dark:text-slate-300 mb-8">
-            Karita harnesses specialized AI decision intelligence to help community organizations translate operational friction into clear, measurable social impact.
+        <p class="text-base leading-relaxed mb-8" style="color:var(--text-secondary);">
+            Karita uses AI to help non-profit organizations structure complex problems 
+            and receive actionable advice to make informed decisions.
         </p>
-        <a href="/reframer" class="inline-block bg-karitaGreen text-white font-bold px-8 py-4 rounded hover:bg-green-700 transition focus:ring-2 focus:ring-karitaBlue focus:outline-none">
-            Begin Problem Framing
+        <a href="/reframer"
+           class="inline-flex items-center gap-2 font-semibold px-7 py-3 rounded-lg transition-colors"
+           style="background:var(--accent); color:#fff; font-size:0.95rem;"
+           onmouseover="this.style.background='var(--accent-hover)'"
+           onmouseout="this.style.background='var(--accent)'">
+            Start solving your problem
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-stretch">
-        <div class="border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-6 rounded transition-colors flex flex-col justify-between" id="strategy">
+    <!-- Four pillars -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {% set pillars = [
+            ("Strategy", "Translate long-term vision into actionable roadmaps and sustainable impact plans.", "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"),
+            ("Marketing", "Reach the right stakeholders with messaging that builds trust and drives engagement.", "M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.952 9.168-5"),
+            ("Operations", "Optimize delivery workflows, service reviews, and volunteer recruitment pipelines.", "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z"),
+            ("Financial", "Diversify revenue and model cost structures to protect long-term organizational health.", "M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 20h16a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v12a2 2 0 002 2z")
+        ] %}
+        {% for name, desc, icon_path in pillars %}
+        <div class="k-card p-5 flex flex-col gap-3 hover:shadow-sm transition-shadow">
+            <div class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                 style="background:var(--accent-light);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="{{ icon_path }}"/>
+                </svg>
+            </div>
             <div>
-                <h2 class="text-lg font-bold text-karitaGreen mb-3">Strategy</h2>
-                <p class="text-xs text-gray-600 dark:text-slate-400">Translate long-term vision into concrete, actionable implementation plans and sustainable roadmaps tailored to community growth.</p>
+                <h2 class="font-semibold text-sm mb-1" style="color:var(--text-primary)">{{ name }}</h2>
+                <p class="text-xs leading-relaxed" style="color:var(--text-secondary)">{{ desc }}</p>
             </div>
         </div>
-
-        <div class="border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-6 rounded transition-colors flex flex-col justify-between" id="marketing">
-            <div>
-                <h2 class="text-lg font-bold text-karitaBlue mb-3">Marketing</h2>
-                <p class="text-xs text-gray-600 dark:text-slate-400">Refine external communications, target specific stakeholder requirements, and scale outreach campaigns to engage donors and volunteers.</p>
-            </div>
-        </div>
-
-        <div class="border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-6 rounded transition-colors flex flex-col justify-between" id="operations">
-            <div>
-                <h2 class="text-lg font-bold text-karitaGreen mb-3">Operational Effectiveness</h2>
-                <p class="text-xs text-gray-600 dark:text-slate-400">Structure optimized talent workflows, execute comprehensive services reviews, and build dedicated recruitment pipelines for volunteer retention.</p>
-            </div>
-        </div>
-
-        <div class="border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-6 rounded transition-colors flex flex-col justify-between" id="finance">
-            <div>
-                <h2 class="text-lg font-bold text-karitaBlue mb-3">Financial Modeling</h2>
-                <p class="text-xs text-gray-600 dark:text-slate-400">Diversify organizational revenue alternatives and optimize internal cost parameters to protect and expand capital deployment footprint.</p>
-            </div>
-        </div>
+        {% endfor %}
     </div>
+
 </div>
 {% endblock %}
