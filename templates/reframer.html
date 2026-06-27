@@ -1,118 +1,204 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto py-16 px-6">
-    <div class="mb-10 text-center">
-        <h1 class="text-4xl font-extrabold text-gray-900 dark:text-slate-50 mb-4">Problem Framer</h1>
-        <p class="text-gray-600 dark:text-slate-300">Select your area of focus and describe the challenge. Karita will structure it for analysis.</p>
+<div class="max-w-2xl mx-auto px-6 py-14">
+
+    <!-- Step indicator -->
+    <div class="k-steps">
+        <div class="k-step active">
+            <div class="k-step-dot">1</div>
+            <span>Problem framing</span>
+        </div>
+        <div class="k-step-line"></div>
+        <div class="k-step">
+            <div class="k-step-dot">2</div>
+            <span>Advisory report</span>
+        </div>
     </div>
 
-    <div class="bg-white dark:bg-slate-950 rounded-lg p-8 shadow-sm border border-gray-200 dark:border-slate-800">
-        
-        <div class="flex gap-4 mb-6">
-            <div class="flex-1">
-                <label for="serviceSelect" class="block text-sm font-semibold mb-2">Service Area</label>
-                <select id="serviceSelect" onchange="updateSubServices()" class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-4 py-2 focus:ring-2 focus:ring-karitaBlue outline-none">
-                    <option value="">Select a Pillar...</option>
+    <div class="mb-8">
+        <h1 class="text-2xl font-bold mb-2" style="color:var(--text-primary)">Describe your challenge</h1>
+        <p class="text-sm" style="color:var(--text-secondary)">
+            Tell us what your organization is facing. Karita will structure it and route it to the right advisory areas.
+        </p>
+    </div>
+
+    <!-- Error banner (hidden by default) -->
+    <div id="errorBanner" class="k-error mb-5 hidden" role="alert">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" flex-shrink="0" style="flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3M8 10.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span id="errorMsg">Something went wrong.</span>
+    </div>
+
+    <!-- Input card -->
+    <div class="k-card p-7 mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+            <div>
+                <label for="serviceSelect" class="k-label">Advisory area</label>
+                <select id="serviceSelect" onchange="updateSubServices()" class="k-select">
+                    <option value="">Select a pillar…</option>
                     <option value="strategy">Strategy</option>
                     <option value="marketing">Marketing</option>
-                    <option value="operations">Operational Effectiveness</option>
-                    <option value="financial">Financial Modeling</option>
+                    <option value="operations">Operational effectiveness</option>
+                    <option value="financial">Financial modeling</option>
                     <option value="other">Other</option>
                 </select>
             </div>
-            
-            <div class="flex-1">
-                <label for="subServiceSelect" class="block text-sm font-semibold mb-2">Specific Focus</label>
-                <select id="subServiceSelect" class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded px-4 py-2 focus:ring-2 focus:ring-karitaBlue outline-none" disabled>
-                    <option value="">Awaiting Service Selection...</option>
+            <div>
+                <label for="subServiceSelect" class="k-label">Specific focus</label>
+                <select id="subServiceSelect" class="k-select" disabled>
+                    <option value="">Select area first…</option>
                 </select>
             </div>
         </div>
 
-        <label for="messyInput" class="block text-sm font-semibold mb-2">Describe the Issue</label>
-        <textarea id="messyInput" rows="6" class="w-full bg-slate-50 dark:bg-slate-900 border border-gray-300 dark:border-slate-700 rounded p-4 mb-6 focus:ring-2 focus:ring-karitaBlue outline-none" placeholder="Provide as much context as possible..."></textarea>
-        
-        <button id="frameBtn" onclick="submitToFramer()" class="w-full bg-karitaGreen text-white font-bold py-3 rounded hover:bg-green-700 transition focus:ring-2 focus:ring-green-400 outline-none">
-            Reframe Problem
+        <div class="mb-5">
+            <label for="messyInput" class="k-label">
+                Describe the issue
+                <span id="charCount" class="font-normal" style="color:var(--text-muted); float:right">0 / 2000</span>
+            </label>
+            <textarea id="messyInput" rows="7" maxlength="2000" class="k-textarea"
+                oninput="updateCharCount(this)"
+                placeholder="Describe the challenge in your own words — funding constraints, staffing issues, program delivery gaps, anything relevant. The more context, the better the analysis."></textarea>
+        </div>
+
+        <button id="frameBtn" onclick="submitToFramer()" class="k-btn-primary">
+            Analyse problem
         </button>
     </div>
 
-    <div id="reviewSection" class="hidden mt-8 bg-blue-50 dark:bg-slate-900 rounded-lg p-8 border border-blue-200 dark:border-slate-800">
-        <h2 class="text-xl font-bold text-karitaBlue mb-2">Reframed Statement</h2>
-        <p class="mb-4 text-sm">Review the structured problem below before sending it to the Solution Design agents.</p>
-        
-        <textarea id="cleanProblem" rows="5" class="w-full bg-white dark:bg-slate-950 border border-blue-300 dark:border-slate-700 rounded p-4 mb-4 focus:ring-2 focus:ring-karitaBlue outline-none"></textarea>
-        
-        <button onclick="approveAndProceed()" class="w-full bg-karitaBlue text-white font-bold py-3 rounded hover:bg-blue-700 transition">
-            Approve & Generate Solution
+    <!-- Review panel (shown after reframe) -->
+    <div id="reviewSection" class="hidden">
+
+        <div class="flex items-center gap-3 mb-5">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                 style="background:var(--accent-light)">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div>
+                <p class="text-sm font-semibold" style="color:var(--text-primary)">Problem structured</p>
+                <p class="text-xs" style="color:var(--text-muted)">Review and edit before generating the advisory report</p>
+            </div>
+        </div>
+
+        <!-- Detected pillar pills -->
+        <div id="pillarRow" class="hidden mb-4">
+            <p class="text-xs font-semibold mb-2" style="color:var(--text-muted);">Routing to:</p>
+            <div id="pillarTags" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <div class="k-card p-6 mb-4">
+            <label for="cleanProblem" class="k-label">Structured problem statement</label>
+            <p class="text-xs mb-3" style="color:var(--text-muted)">You can edit this before proceeding.</p>
+            <textarea id="cleanProblem" rows="6" class="k-textarea"></textarea>
+        </div>
+
+        <button onclick="approveAndProceed()" class="k-btn-primary">
+            Generate advisory report
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
     </div>
+
 </div>
 
 <script>
     const subServices = {
-        strategy: ["Vision and Mission Definition", "Strategy Development and Planning", "Growth Opportunity Assessment", "Impact Analysis"],
-        marketing: ["Branding and Communications", "Stakeholder and Target Audience Analysis", "Channel Outreach and Strategy"],
-        operations: ["Target Operating Model", "Services Review", "Volunteer finding & Engagement Strategy"],
-        financial: ["Revenue Diversification Analysis", "Cost Optimization"],
-        other: ["Other"]
+        strategy:   ["Vision and mission definition","Strategy development and planning","Growth opportunity assessment","Impact analysis"],
+        marketing:  ["Branding and communications","Stakeholder and target audience analysis","Channel outreach and strategy"],
+        operations: ["Target operating model","Services review","Volunteer finding and engagement strategy"],
+        financial:  ["Revenue diversification analysis","Cost optimization"],
+        other:      ["Other"]
     };
 
     function updateSubServices() {
-        const service = document.getElementById('serviceSelect').value;
-        const subSelect = document.getElementById('subServiceSelect');
-        
-        subSelect.innerHTML = '';
-        if (service && subServices[service]) {
-            subSelect.disabled = false;
-            subServices[service].forEach(item => {
-                const option = document.createElement('option');
-                option.value = item;
-                option.textContent = item;
-                subSelect.appendChild(option);
+        const val = document.getElementById('serviceSelect').value;
+        const sub = document.getElementById('subServiceSelect');
+        sub.innerHTML = '';
+        if (val && subServices[val]) {
+            sub.disabled = false;
+            subServices[val].forEach(item => {
+                const o = document.createElement('option');
+                o.value = o.textContent = item;
+                sub.appendChild(o);
             });
         } else {
-            subSelect.disabled = true;
-            subSelect.innerHTML = '<option value="">Awaiting Service Selection...</option>';
+            sub.disabled = true;
+            sub.innerHTML = '<option value="">Select area first…</option>';
         }
     }
 
+    function updateCharCount(el) {
+        document.getElementById('charCount').textContent = el.value.length + ' / ' + el.maxLength;
+    }
+
+    function showError(msg) {
+        const banner = document.getElementById('errorBanner');
+        document.getElementById('errorMsg').textContent = msg;
+        banner.classList.remove('hidden');
+        banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideError() {
+        document.getElementById('errorBanner').classList.add('hidden');
+    }
+
     async function submitToFramer() {
-        const service = document.getElementById('serviceSelect').value;
+        hideError();
+        const service     = document.getElementById('serviceSelect').value;
         const sub_service = document.getElementById('subServiceSelect').value;
-        const problem = document.getElementById('messyInput').value;
-        const btn = document.getElementById('frameBtn');
+        const problem     = document.getElementById('messyInput').value.trim();
+        const btn         = document.getElementById('frameBtn');
 
-        if (!service || !problem) return alert("Please select a service and describe the issue.");
+        if (!service) { showError('Please select an advisory area before continuing.'); return; }
+        if (problem.length < 20) { showError('Please describe the issue in a bit more detail (at least 20 characters).'); return; }
 
-        btn.innerText = "Analyzing Context...";
         btn.disabled = true;
+        btn.innerHTML = '<svg class="k-spinner" style="width:1rem;height:1rem;border-width:2px" viewBox="0 0 24 24"></svg> Analysing…';
 
         try {
-            const response = await fetch('/reframe', {
+            const res  = await fetch('/reframe', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ service, sub_service, problem })
             });
-            const data = await response.json();
+            if (!res.ok) throw new Error('Server error ' + res.status);
+            const data = await res.json();
 
-            if(data.success) {
+            if (data.success) {
                 document.getElementById('cleanProblem').value = data.framedProblem;
+
+                // Render pillar pills
+                const pillars = data.pillars || [];
+                if (pillars.length) {
+                    const container = document.getElementById('pillarTags');
+                    container.innerHTML = pillars.map(p =>
+                        `<span class="k-pill">${p}</span>`
+                    ).join('');
+                    document.getElementById('pillarRow').classList.remove('hidden');
+                }
+
+                // Cache for solution page
+                localStorage.setItem('karita_problem', data.framedProblem);
+                localStorage.setItem('karita_pillars', JSON.stringify(pillars));
+
                 document.getElementById('reviewSection').classList.remove('hidden');
+                document.getElementById('reviewSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                showError(data.error || 'Could not structure the problem. Please try again.');
             }
-        } catch (error) {
-            alert("Connection error.");
+        } catch (err) {
+            showError('Connection error — please check your network and try again.');
+            console.error(err);
         } finally {
-            btn.innerText = "Reframe Problem";
             btn.disabled = false;
+            btn.innerHTML = 'Analyse problem';
         }
     }
 
     function approveAndProceed() {
-        const cleanProblemText = document.getElementById('cleanProblem').value;
-        localStorage.setItem('karita_clean_problem', cleanProblemText);
-        window.location.href = "/solution-design";
+        const text = document.getElementById('cleanProblem').value.trim();
+        if (!text) { showError('The problem statement is empty. Please try again.'); return; }
+        localStorage.setItem('karita_problem', text);
+        window.location.href = '/solution-design';
     }
 </script>
 {% endblock %}
