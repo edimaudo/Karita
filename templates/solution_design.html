@@ -57,7 +57,7 @@
             </button>
         </div>
 
-        <a href="/reframer" class="k-btn-ghost" style="display:inline-flex;width:auto;font-size:0.8rem;padding:0.5rem 1rem;text-decoration:none;">
+        <a href="/reframer" class="k-btn-back" style="width:auto;">
             ← Back to problem framer
         </a>
     </div>
@@ -93,14 +93,24 @@
         </div>
 
         <!-- Actions row -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-            <button onclick="downloadReport()" class="k-btn-primary" style="background:var(--accent)">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+            <button onclick="downloadReport()" class="k-btn-primary">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3M3 12h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 Download report (.md)
             </button>
             <button onclick="showSaveForm()" class="k-btn-ghost">
                 Save and share
             </button>
+        </div>
+
+        <!-- Back / restart row -->
+        <div class="flex flex-wrap gap-3 mb-8">
+            <a href="/reframer" class="k-btn-back" style="width:auto;">
+                ← Back to problem framer
+            </a>
+            <a href="/" class="k-btn-back" style="width:auto;">
+                ↩ Start again
+            </a>
         </div>
 
         <!-- Save form (shown on demand — value first, then friction) -->
@@ -144,9 +154,6 @@
             <p class="text-xs" style="color:var(--text-muted)">A copy has been noted. Download your .md file above to keep a local copy.</p>
         </div>
 
-        <a href="/reframer" class="k-btn-ghost" style="display:inline-flex;width:auto;font-size:0.8rem;padding:0.5rem 1rem;text-decoration:none;">
-            ← Frame a new problem
-        </a>
     </div>
 
 </div>
@@ -245,7 +252,7 @@ async function startGeneration() {
     buildPillarProgress(pillars);
 
     try {
-        const res = await fetch('/api/solve', {
+        const res = await fetch('/solution-design', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ problem, pillars })
@@ -352,10 +359,3 @@ async function submitSave() {
     if (!name || !email) { showError('Please enter your name and email to save the report.'); return; }
 
     // In production this would POST to /api/save
-    // For now confirm immediately
-    document.getElementById('saveForm').classList.add('hidden');
-    document.getElementById('saveConfirm').classList.remove('hidden');
-    document.getElementById('saveConfirm').scrollIntoView({ behavior: 'smooth' });
-}
-</script>
-{% endblock %}
