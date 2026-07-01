@@ -130,36 +130,57 @@
         .k-btn-primary {
             display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
             background: var(--accent);
-            color: #fff;
+            color: #ffffff !important;   /* force white — survives <a> tag color inheritance */
             font-weight: 600;
             font-size: 0.9rem;
             padding: 0.7rem 1.5rem;
             border-radius: 0.5rem;
-            border: none;
+            border: 2px solid var(--accent);
             cursor: pointer;
-            transition: background 0.15s, transform 0.1s;
+            text-decoration: none;       /* reset for <a> usage */
+            transition: background 0.15s, border-color 0.15s, transform 0.1s;
             width: 100%;
+            box-sizing: border-box;
         }
-        .k-btn-primary:hover   { background: var(--accent-hover); }
-        .k-btn-primary:active  { transform: scale(0.98); }
-        .k-btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
-        .k-btn-primary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .k-btn-primary:hover        { background: var(--accent-hover); border-color: var(--accent-hover); color: #ffffff !important; }
+        .k-btn-primary:active       { transform: scale(0.98); }
+        .k-btn-primary:disabled     { opacity: 0.55; cursor: not-allowed; }
+        .k-btn-primary:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
         .k-btn-ghost {
             display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
             background: transparent;
-            color: var(--text-secondary);
+            color: var(--text-primary) !important;
             font-weight: 500;
             font-size: 0.875rem;
             padding: 0.65rem 1.25rem;
             border-radius: 0.5rem;
-            border: 1px solid var(--border-strong);
+            border: 2px solid var(--border-strong);
             cursor: pointer;
-            transition: background 0.15s, color 0.15s;
+            text-decoration: none;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
             width: 100%;
+            box-sizing: border-box;
         }
-        .k-btn-ghost:hover { background: var(--page-bg); color: var(--text-primary); }
-        .k-btn-ghost:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .k-btn-ghost:hover        { background: var(--accent-light); border-color: var(--accent-border); color: var(--accent) !important; }
+
+        /* Back / navigation link styled as a secondary button */
+        .k-btn-back {
+            display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+            background: transparent;
+            color: var(--text-secondary) !important;
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 0.6rem 1.1rem;
+            border-radius: 0.5rem;
+            border: 1.5px solid var(--border-strong);
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.15s, border-color 0.15s, color 0.15s;
+            box-sizing: border-box;
+        }
+        .k-btn-back:hover { background: var(--page-bg); border-color: var(--border-strong); color: var(--text-primary) !important; }
+        .k-btn-ghost:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
         /* ── Labels ── */
         .k-label {
