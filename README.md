@@ -5,18 +5,20 @@
 
 ## Project Structure
 ```
-karita
-├── main.py
-├── vercel.json
+karita/
 ├── templates/
-    ├── base.html
-    ├── index.html
-    ├── reframer.html
-    ├── solution_design.html
-    └── 404.html
+│   ├── 404.html                              
+│   ├── base.html                
+│   ├── index.html                
+│   ├── reframer.html             
+│   └── solution_design.html
 ├── static/
-   ├── css/
-   │   └── style.css
-   └── js/
-       └── app.js
+|   ├── css/
+|   │   └── style.css
+|   └── js/
+|       └── app.js                                
+├── agents.py                    
+├── main.py                      
+├── requirements.txt             
+└── utils.py                     
 ```
