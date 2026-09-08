@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-font-size="medium">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Karita{% endblock %}</title>
+  <meta name="description" content="Strategic guidance for nonprofit organizations.">
+  <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="/">Karita</a>
+  <nav aria-label="Primary">
+    <a href="/reframer">Reframer</a>
+    <a href="/solution-design">Solution Design</a>
+  </nav>
+  <div class="settings" aria-label="Display settings">
+    <button type="button" data-font="small" aria-label="Small text">A−</button>
+    <button type="button" data-font="medium" aria-label="Medium text" class="active">A</button>
+    <button type="button" data-font="large" aria-label="Large text">A+</button>
+    <button type="button" data-theme-toggle aria-label="Toggle light and dark mode">☼ / ☾</button>
+  </div>
+</header>
+<main>{% block content %}{% endblock %}</main>
+<footer>© 2026 Karita</footer>
+<script src="{{ url_for('static', path='js/app.js') }}" defer></script>
+</body>
+</html>

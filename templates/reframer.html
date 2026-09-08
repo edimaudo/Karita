@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Karita — Reframer{% endblock %}
+{% block content %}
+<section class="page-intro">
+  <p class="eyebrow">01 / FRAME</p>
+  <h1>What problem are we actually solving?</h1>
+  <p>Describe the issue in your own words. Add evidence and assumptions where available.</p>
+</section>
+
+<form class="work-form" method="post" action="/reframer" enctype="multipart/form-data">
+  <div class="form-block">
+    <label for="problem">Original issue <span>*</span></label>
+    <textarea id="problem" name="problem" rows="9" required placeholder="Describe the problem, situation or decision you need help with..."></textarea>
+  </div>
+
+  <div class="form-block">
+    <fieldset>
+      <legend>Relevant area(s)</legend>
+      <div class="check-grid">
+        <label><input type="checkbox" name="pillars" value="strategy"> Strategy</label>
+        <label><input type="checkbox" name="pillars" value="marketing"> Marketing</label>
+        <label><input type="checkbox" name="pillars" value="operations"> Operational Effectiveness</label>
+        <label><input type="checkbox" name="pillars" value="organization"> Organizational Strength</label>
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="form-block">
+    <label for="assumptions">Assumptions or additional context</label>
+    <textarea id="assumptions" name="assumptions" rows="5" placeholder="What do you already believe to be true? What constraints or concerns should Karita consider?"></textarea>
+  </div>
+
+  <div class="form-block">
+    <label for="attachments">Supporting material</label>
+    <input id="attachments" name="attachments" type="file" multiple accept=".pdf,.docx,.csv,.xlsx">
+    <p class="field-note">PDF, DOCX, CSV or XLSX. Do not upload confidential information you are not authorized to share.</p>
+  </div>
+
+  <button class="button primary" type="submit">Reframe problem</button>
+</form>
+{% endblock %}

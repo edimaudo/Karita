@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Karita — Solution Design{% endblock %}
+{% block content %}
+<section class="page-intro">
+  <p class="eyebrow">02 / SOLUTION DESIGN</p>
+  <h1>What should we do?</h1>
+  <p>Karita uses the validated problem definition and available evidence to develop a consulting-style recommendation.</p>
+</section>
+
+<section class="workflow" aria-label="Consulting workflow">
+  <span class="current">01 Frame</span><span>02 Diagnose</span><span>03 Explore</span><span>04 Decide</span><span>05 Act</span>
+</section>
+
+{% if framing %}
+<section class="context-card">
+  <p class="eyebrow">VALIDATED PROBLEM</p>
+  <h2>{{ framing.reframed_problem }}</h2>
+  <p>{{ framing.rationale }}</p>
+</section>
+{% else %}
+<section class="empty-state">
+  <h2>No validated problem yet.</h2>
+  <p>Start in the Reframer to define and validate the problem before developing a solution.</p>
+  <a class="button primary" href="/reframer">Go to Reframer</a>
+</section>
+{% endif %}
+
+<form class="solution-form" method="post" action="/solution-design">
+  {% if framing %}
+  <input type="hidden" name="reframed_problem" value="{{ framing.reframed_problem }}">
+  <input type="hidden" name="rationale" value="{{ framing.rationale }}">
+  <button class="button primary" type="submit">Develop solution</button>
+  {% endif %}
+</form>
+{% endblock %}
