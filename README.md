@@ -13,10 +13,10 @@ karita/
 │   ├── reframer.html             
 │   └── solution_design.html
 ├── static/
-|   ├── css/
-|   │   └── style.css
-|   └── js/
-|       └── app.js                                
+│   ├── css 
+│   │   └── style.css
+│   └── js/
+│       └── app.js                                
 ├── agents.py                    
 ├── main.py                      
 ├── requirements.txt             
